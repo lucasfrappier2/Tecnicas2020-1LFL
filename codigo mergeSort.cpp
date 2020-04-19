@@ -1,13 +1,13 @@
 #include<stdio.h>
  
-void mergesort(int array[],int i,int j);
+void mergeSort(int array[],int i,int j);
 void merge(int array[],int i1,int j1,int i2,int j2);
  
 int main(){
 
 	int array[8],i;							//Se define el arreglo de tamaño 8
 
-	printf("Elementos del arreglo:");
+	printf("Elementos del arreglo: \n");
 	
 	for(i=0;i<8;i++){
 		
