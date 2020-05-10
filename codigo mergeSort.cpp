@@ -1,27 +1,88 @@
-#include<stdio.h>
- 
+
 void mergeSort(int array[],int i,int j);
 void merge(int array[],int i1,int j1,int i2,int j2);
  
+#include<stdio.h>
+#include <time.h>
+
+#define ARRAYSIZE 500000
+#define FILENAME "sizeonehr.txt"
+
+void selectionSort(int array[], int n, int *pNumIt, int *pNumSw);
+
+ 
 int main(){
-
-	int array[8],i;							//Se define el arreglo de tamaño 8
-
-	printf("Elementos del arreglo: \n");
 	
-	for(i=0;i<8;i++){
-		
-		printf("Elemento %d: ", i);			//El usuario digita cada elemento y se agrega al arreglo
-		scanf("%d",&array[i]);
+	int numIt = 0;
+	int numSw = 0;
+	int *pNumIt = &numIt;
+	int *pNumSw = &numSw;
+
+	FILE    *f;
+    int     array[ARRAYSIZE];
+    int     i, ctr = 0;
+
+    f = fopen(FILENAME, "r");
+
+    while((!feof(f)) && (ctr < ARRAYSIZE))
+    {
+        fscanf(f, "%d ", &array[ctr++]);
+    }
+    fclose(f); 
+
+    //for(i=0; i<ARRAYSIZE; i++){
+    //	printf("%d, ", array[i]);
+	
+	//}
+	
+	FILE *ff = fopen("output.txt", "ab");
+	
+	fprintf(ff, "Archivo %c", FILENAME);
+	
+	time_t t = time(NULL);
+  	struct tm tm = *localtime(&t);																							//FECHA ANTES
+  	fprintf(ff, "\nantes: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+
+
+	mergeSort(array, 0, ARRAYSIZE);
+	int  j;
+  int min, temp;							//Declaracion de variables que se usaran
+
+  for (i = 0; i < ARRAYSIZE-1; i++){
+    min = i;
+    for (j = i+1; j < ARRAYSIZE; j++){
+    	numIt++;
+      	if (array[j] < array[min]){
+        	min = j;+
+        	numSw++;
+        }
+    }
+    temp = array[i];
+    array[i] = array[min];
+    array[min] = temp;
+  }
+
+	
+	fprintf(ff, "Arreglo sorteado:\n");
+	for(i=0;i<ARRAYSIZE-1;i++){
+		//printf("%d ",array[i]);
+		fprintf(ff, "%d ", array[i]);
 	}
-	mergeSort(array,0,7);
 	
-	printf("\nArreglo sorteado :");
-	for(i=0;i<8;i++)
-		printf("%d ",array[i]);
-		
+	time_t t2 = time(NULL);
+  	struct tm tm2 = *localtime(&t2);																						//FECHA DESPUES
+  	fprintf(ff, "\ndespues: %d-%02d-%02d %02d:%02d:%02d\n", tm2.tm_year + 1900, tm2.tm_mon + 1, tm2.tm_mday, tm2.tm_hour, tm2.tm_min, tm2.tm_sec);
+  	
+	//fprintf(ff, "%d segundos\n", time_spent);
+	fprintf(ff, "\nComparaciones: %d", numIt);
+	fprintf(ff, "\nIntercambios: %d", numSw);
+	
+	fclose(ff);
+
 	return 0;
 }
+
  
 void mergeSort(int array[],int i,int j)
 {
