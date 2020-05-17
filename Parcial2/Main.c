@@ -9,6 +9,7 @@ int main(){
 	printf("Locales por piso: "); scanf("%d", &numLoc);
 	local **centroC = fill(pisos, numLoc);
     //inicializarCC(centroC);
+
     
     int choice;
     do{
@@ -31,6 +32,9 @@ int main(){
     			break;
     		case 6:
     			buscarLocal(centroC, pisos, numLoc);
+    			break;
+    		case 7:
+    			rate(centroC, pisos, numLoc);
     			break;
 		}
 	}while(choice != 0);

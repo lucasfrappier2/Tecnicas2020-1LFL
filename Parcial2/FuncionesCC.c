@@ -23,6 +23,7 @@ int menu(){
 	printf("4. Eliminar Local\n");
 	printf("5. Modificar nombre local\n");
 	printf("6. Encontrar local\n");
+	printf("7. Calificar Local\n");
 	printf("Para salir, ingrese cero (0)\n");
 	printf("Seleccion: ");
 	scanf("%d", &selec);
@@ -41,6 +42,9 @@ local** fill(int pisos, int numLoc){
 			centroC[c][j].idLocal = c*j;						//ID "unico" pues es producto de el numero de fila*columna, el cual será distinto para cada celda
 			centroC[c][j].pisoLocal = c;
 			centroC[c][j].numLocalxPiso = j;
+			centroC[c][j].rating[0] = 0;
+			centroC[c][j].rating[1] = 0;
+
 
 		}
 		
@@ -181,5 +185,22 @@ void buscarLocal(local** centroC, int pisos, int numLoc){						//Busca la ubicac
 	return;
 }
 
+void rate(local** centroC, int pisos, int numLoc){					//Elimina un local de la matriz
+	int col, fil, rating;
+	printf("Ingrese el piso y el numero de local a calificar: \nPiso: ");
+	scanf("%d", &col);
+	printf("\nLocal: ");
+	scanf("%d", &fil);
+	do{
+		printf("Califique a '%s' de 1 a 5: ", centroC[col][fil].nombreLocal);
+		scanf("%d", &rating);				//err
+	}while(rating < 1 || rating > 5);
+	
+	centroC[col][fil].rating[0] += 1;
+	centroC[col][fil].rating[1] += rating;
+	printf("\nSe ha calificado a %s\nSu rating promedio ahora es de %0.1f", centroC[col][fil], (float)centroC[col][fil].rating[1]/centroC[col][fil].rating[0]);
+	return;
+	
+}
 
 

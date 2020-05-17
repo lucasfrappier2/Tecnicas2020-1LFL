@@ -17,7 +17,7 @@ typedef struct {
 	int pisoLocal;
 	int numLocalxPiso;//Columnas
     disponibilidad dispo;
-    int rating[2];
+    int rating[2];							//[visitas, totalRatings]
     int metros2;
     
 
@@ -50,6 +50,10 @@ void eliminarLocal(local** centroC, int pisos, int numLoc);
 void cambiarNombreLocal(local** centroC, int pisos, int numLoc);
 
 void buscarLocal(local** centroC, int pisos, int numLoc);
+
+void rate(local** centroC, int pisos, int numLoc);
+	
+
 
 
 
