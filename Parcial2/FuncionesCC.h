@@ -35,6 +35,8 @@ local** fill(int pisos, int numLoc);
 
 void inicializarCC(local** centroC);
 
+void contarLocales(local** centroC, int pisos, int numLoc);
+
 void agregarLocal(local** centroC, int pisos, int numLoc);
 
 int menu();

@@ -4,14 +4,35 @@
 
 
 int main(){
-	int pisos, numLoc;
+	int pisos, numLoc, carg;
+	local **centroC;
+	do{
+		printf("1. Cargar archivo pre-existente\n2. Comenzar desde cero\n");
+		scanf("%d", &carg);
+		switch(carg){
+			case 1: ;
+				FILE *fpisr = fopen("pisos.txt", "r");
+				FILE *flocr = fopen("numLoc.txt", "r");
+				fscanf(fpisr, "%d", &pisos);															//Abre los archivos con las dimensiones pre-existentes
+				fscanf(flocr, "%d", &numLoc);
+				fclose(fpisr); fclose(flocr);
+				centroC = fill(pisos, numLoc);															//Crea el centro comercial
+				load(centroC, pisos, numLoc, "cc.bin");													//Carga locales previos
+				break;
+			case 2: ;
+				FILE *borrbin = fopen("cc.bin", "wb"); fclose(borrbin);
+				printf("Pisos: "); scanf("%d", &pisos);
+				printf("Locales por piso: "); scanf("%d", &numLoc);
+				FILE *fpisw = fopen("pisos.txt", "w");
+				FILE *flocw = fopen("numLoc.txt", "w");
+				fprintf(fpisw, "%d", pisos); fprintf(flocw, "%d", numLoc);
+				fclose(fpisw); fclose(flocw);
+				centroC = fill(pisos, numLoc);
+				break;
 
+ 		}
+	}while(carg>2 || carg<1);
 
-
-	printf("Pisos: "); scanf("%d", &pisos);
-	printf("Locales por piso: "); scanf("%d", &numLoc);
-	local **centroC = fill(pisos, numLoc);
-	load(centroC, pisos, numLoc, "cc.bin");
 
     int choice;
     do{

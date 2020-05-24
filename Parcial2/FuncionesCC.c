@@ -54,7 +54,7 @@ local** fill(int pisos, int numLoc){
 	}
 	return centroC;
 }
-
+/*
 void inicializarCC(local** centroC){					//Se usa para que el arreglo de locales no tenga asignacion de valores basura que ya existen en la memoria
 	int c, j;
 	for(c = 0; c<COL; c++){
@@ -64,8 +64,21 @@ void inicializarCC(local** centroC){					//Se usa para que el arreglo de locales
 			centroC[c][j].numLocalxPiso = j;
 			centroC[c][j].dispo = disp;							//Se asigna el enum de disponibilidad de toda la matriz a DISP para que en cualquier celda se pueda asignar un local
 		}
-		
 	}
+}
+*/
+void contarLocales(local** centroC, int pisos, int numLoc){
+	int count = 0, c, j;
+	FILE *fnum = fopen("cantLocales.txt", "w");
+	for(c = 0; c<pisos; c++){
+		for(j = 0; j<numLoc; j++){
+			if(centroC[c][j].dispo == noDisp){
+				count++;
+			}
+		}
+	}
+	fprintf(fnum, "%d", count);
+	fclose(fnum);
 }
 
 void agregarLocal(local** centroC, int pisos, int numLoc){
@@ -103,6 +116,7 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 			centroC[piso][loc].dispo = noDisp;
 			printf("Local agregado exitosamente: \n");				//Confirma que se agrega un local y hace display de su informacion
 			printf("Nombre: %s\nUbicacion: Piso %d, Local %d\nID Local: %d\n", centroC[piso][loc].nombreLocal, centroC[piso][loc].pisoLocal, centroC[piso][loc].numLocalxPiso, centroC[piso][loc].idLocal);	
+			contarLocales(centroC, pisos, numLoc);
 		}else{
 			printf("Local ocupado\n");
 		}
@@ -243,19 +257,22 @@ void save(local** centroC, int pisos, int numLoc, char* fileName){
 }
 
 void load(local** centroC, int pisos, int numLoc, char* fileName){
-	int i, j;
+	int i, localesEx;
 	FILE *fpt = fopen(fileName ,"rb");
+	FILE *cantL = fopen("cantLocales.txt", "r");
 	local currentLoc;
    	if (fpt == NULL){
        printf("Error! opening file");
 
        // Program exits if the file pointer returns NULL.
        exit(1);
-   }printf("ESTOY DESPUES DEL IF Y ANTES DEL GUAIL");
-	while(fread(&currentLoc, sizeof(local), 1, fpt) == sizeof(local)){
+   }printf("ESTOY DESPUES DEL IF Y ANTES DEL GUAIL\n");
+   fscanf(cantL, "%d", &localesEx);
+   printf("Locales a cargar: %d\n", localesEx);
+	for(i = 0; i < localesEx; i++){
 		fread(&currentLoc, sizeof(local), 1, fpt); 
 	   	centroC[currentLoc.pisoLocal][currentLoc.numLocalxPiso] = currentLoc;
-		printf("%s", currentLoc.nombreLocal);
+		printf("Cargando %s", currentLoc.nombreLocal);
 	}
 	fclose(fpt);	   		
 	   		
