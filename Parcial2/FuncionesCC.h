@@ -9,14 +9,14 @@
 //Local
 typedef enum disponibilidad{
     disp, noDisp
-}disponibilidad;
+}disponibilidad_e;
 
 typedef struct {
 	char nombreLocal[35];
 	int idLocal; // Calculado automaticamente por su programa
 	int pisoLocal;
 	int numLocalxPiso;//Columnas
-    disponibilidad dispo;
+    disponibilidad_e dispo;
     int rating[2];							//[visitas, totalRatings]
     int metros2;
     
@@ -53,7 +53,9 @@ void buscarLocal(local** centroC, int pisos, int numLoc);
 
 void rate(local** centroC, int pisos, int numLoc);
 	
+void save(local** centroC, int pisos, int numLoc, char* fileName);
 
+void load(local** centroC, int pisos, int numLoc, char* fileName);
 
 
 

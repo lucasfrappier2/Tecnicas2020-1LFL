@@ -5,12 +5,14 @@
 
 int main(){
 	int pisos, numLoc;
+
+
+
 	printf("Pisos: "); scanf("%d", &pisos);
 	printf("Locales por piso: "); scanf("%d", &numLoc);
 	local **centroC = fill(pisos, numLoc);
-    //inicializarCC(centroC);
+	load(centroC, pisos, numLoc, "cc.bin");
 
-    
     int choice;
     do{
     	choice = menu();
@@ -36,6 +38,12 @@ int main(){
     		case 7:
     			rate(centroC, pisos, numLoc);
     			break;
+    		case 15:
+    			save(centroC, pisos, numLoc, "cc.bin");
+    			break;
+    		case 16:
+    			break;
+    			
 		}
 	}while(choice != 0);
     

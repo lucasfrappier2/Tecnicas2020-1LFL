@@ -24,6 +24,8 @@ int menu(){
 	printf("5. Modificar nombre local\n");
 	printf("6. Encontrar local\n");
 	printf("7. Calificar Local\n");
+	
+	printf("15. Guardar CC\n");
 	printf("Para salir, ingrese cero (0)\n");
 	printf("Seleccion: ");
 	scanf("%d", &selec);
@@ -44,6 +46,7 @@ local** fill(int pisos, int numLoc){
 			centroC[c][j].numLocalxPiso = j;
 			centroC[c][j].rating[0] = 0;
 			centroC[c][j].rating[1] = 0;
+			centroC[c][j].metros2 = 0;
 
 
 		}
@@ -66,6 +69,7 @@ void inicializarCC(local** centroC){					//Se usa para que el arreglo de locales
 }
 
 void agregarLocal(local** centroC, int pisos, int numLoc){
+	
 	int piso=0, loc=0;
 	
 	do{
@@ -92,12 +96,17 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 		return;
 */
 //	}else{
-		printf("Nombre local: ");
-		scanf("%s", centroC[piso][loc].nombreLocal);
-		
-		centroC[piso][loc].dispo = noDisp;
-		printf("Local agregado exitosamente: \n");				//Confirma que se agrega un local y hace display de su informacion
-		printf("Nombre: %s\nUbicacion: Piso %d, Local %d\nID Local: %d\n", centroC[piso][loc].nombreLocal, centroC[piso][loc].pisoLocal, centroC[piso][loc].numLocalxPiso, centroC[piso][loc].idLocal);
+		if(centroC[piso][loc].dispo == disp){
+			printf("Nombre local: ");
+			scanf("%s", centroC[piso][loc].nombreLocal);
+			
+			centroC[piso][loc].dispo = noDisp;
+			printf("Local agregado exitosamente: \n");				//Confirma que se agrega un local y hace display de su informacion
+			printf("Nombre: %s\nUbicacion: Piso %d, Local %d\nID Local: %d\n", centroC[piso][loc].nombreLocal, centroC[piso][loc].pisoLocal, centroC[piso][loc].numLocalxPiso, centroC[piso][loc].idLocal);	
+		}else{
+			printf("Local ocupado\n");
+		}
+
 //	}
 	
 }
@@ -107,7 +116,7 @@ void mostrarLocales(local** centroC, int pisos, int numLoc){					//Imprime todas
 	for(c = 0; c<pisos; c++){
 		for(j = 0; j<numLoc; j++){
 			if(centroC[c][j].dispo == noDisp){
-				printf("%s\nPiso %d, Local %d\nID: %d", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal);
+				printf("%s\nPiso %d, Local %d\nID: %d\nRating: %0.1f", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, (float)centroC[c][j].rating[1]/centroC[c][j].rating[0]);
 				printf("\n---------\n");
 			}
 		}
@@ -198,9 +207,78 @@ void rate(local** centroC, int pisos, int numLoc){					//Elimina un local de la 
 	
 	centroC[col][fil].rating[0] += 1;
 	centroC[col][fil].rating[1] += rating;
-	printf("\nSe ha calificado a %s\nSu rating promedio ahora es de %0.1f", centroC[col][fil], (float)centroC[col][fil].rating[1]/centroC[col][fil].rating[0]);
+	printf("Se suma");
+	printf("\nSe ha calificado a %s\nSu rating promedio ahora es de %0.1f", centroC[col][fil].nombreLocal, (float)centroC[col][fil].rating[1]/centroC[col][fil].rating[0]);
 	return;
 	
 }
+
+void save(local** centroC, int pisos, int numLoc, char* fileName){
+	int i, j;
+	local currentLoc;
+	FILE *fptr = fopen(fileName ,"wb");
+
+	if (fptr == NULL){
+    	printf("Error! opening file");
+
+       // Program exits if the file pointer returns NULL.
+       	exit(1);
+   }
+
+   for(i = 0; i < pisos; i++){
+	   	for(j = 0; j < numLoc; j++){
+	   		if(centroC[i][j].dispo == noDisp){
+	   			currentLoc = centroC[i][j];
+   				fwrite(&currentLoc, sizeof(local), 1, fptr); 
+   				printf("Guardado: %s\n", currentLoc.nombreLocal);
+			}
+
+	   	}
+
+      
+   }
+   fclose(fptr); 
+   printf("Se ha guardado todo el CC");
+   
+}
+
+void load(local** centroC, int pisos, int numLoc, char* fileName){
+	int i, j;
+	FILE *fpt = fopen(fileName ,"rb");
+	local currentLoc;
+   	if (fpt == NULL){
+       printf("Error! opening file");
+
+       // Program exits if the file pointer returns NULL.
+       exit(1);
+   }printf("ESTOY DESPUES DEL IF Y ANTES DEL GUAIL");
+	while(fread(&currentLoc, sizeof(local), 1, fpt) == sizeof(local)){
+		fread(&currentLoc, sizeof(local), 1, fpt); 
+	   	centroC[currentLoc.pisoLocal][currentLoc.numLocalxPiso] = currentLoc;
+		printf("%s", currentLoc.nombreLocal);
+	}
+	fclose(fpt);	   		
+	   		
+}
+
+      
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
