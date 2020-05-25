@@ -25,6 +25,8 @@ int menu(){
 	printf("6. Encontrar local\n");
 	printf("7. Calificar Local\n");
 	printf("8. Ordenar por rating (SelectionSort)\n");
+	printf("9. Ordenar por fecha de llegada (InsertionSort)\n");
+	printf("10. Ordenar por tamaño (MergeSort)\n");
 	printf("15. Guardar CC\n");
 	printf("Para salir, ingrese cero (0)\n");
 	printf("Seleccion: ");
@@ -48,6 +50,7 @@ local** fill(int pisos, int numLoc){
 			centroC[c][j].rating[1] = 0;
 			centroC[c][j].metros2 = 0;
 			centroC[c][j].empleados = 0;
+			centroC[c][j].added = 0;
 
 
 		}
@@ -119,6 +122,9 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 			printf("Local agregado exitosamente: \n");				//Confirma que se agrega un local y hace display de su informacion
 			printf("Nombre: %s\nUbicacion: Piso %d, Local %d\nID Local: %d\n", centroC[piso][loc].nombreLocal, centroC[piso][loc].pisoLocal, centroC[piso][loc].numLocalxPiso, centroC[piso][loc].idLocal);	
 			contarLocales(centroC, pisos, numLoc);
+			FILE *add = fopen("cantLocales.txt", "r");
+			fscanf(add, "%d", &centroC[piso][loc].added);
+			fclose(add);
 		}else{
 			printf("Local ocupado\n");
 		}
@@ -334,7 +340,138 @@ void selectionSort(local ordenados[], int n){
 	}
 	return;
 }
+
+
+void orderByArrival(local** centroC, int pisos, int numLoc){
+	int localNum, c, j, ordCt = 0;
+	contarLocales(centroC, pisos, numLoc);
+	FILE *cantl = fopen("cantLocales.txt", "r");
+	fscanf(cantl, "%d", &localNum);
+	fclose(cantl);
+	local ordenados[localNum];
+	printf("%d locales\n", localNum);
+	for(c = 0; c<pisos; c++){
+		for(j = 0; j<numLoc; j++){
+			if(centroC[c][j].dispo == noDisp){
+				ordenados[ordCt] = centroC[c][j];
+				ordCt++;
+			}
+		}
+	}
 	
+
+	insertionSort(ordenados, localNum);
+	
+}
+
+void insertionSort(local ordenados[], int n){
+ 
+    int i, j, c;
+	local key; 
+    for (i = 0; i < n; i++) { 
+        key = ordenados[i]; 
+        j = i - 1; 
+
+        while (j >= 0 && ordenados[j].added > key.added) { 																										//INSERTION SORT
+            ordenados[j + 1] = ordenados[j]; 
+            ordenados[j] = key;
+            j--; 
+        } 
+        //arr[j + 1] = key; 
+    }
+    for(c = 0; c < n; c++){
+		printf("\n%d. %s\n", ordenados[c].added, ordenados[c].nombreLocal);
+			
+	}
+}
+
+void orderBySize(local** centroC, int pisos, int numLoc){
+	int localNum, c, j, ordCt = 0;
+	contarLocales(centroC, pisos, numLoc);
+	FILE *cantl = fopen("cantLocales.txt", "r");
+	fscanf(cantl, "%d", &localNum);
+	fclose(cantl);
+	local ordenados[localNum];
+	printf("%d locales\n", localNum);
+	for(c = 0; c<pisos; c++){
+		for(j = 0; j<numLoc; j++){
+			if(centroC[c][j].dispo == noDisp){
+				ordenados[ordCt] = centroC[c][j];
+				ordCt++;
+			}
+		}
+	}
+	
+
+	mergeSort(ordenados, 0, localNum-1);
+	
+	for(c = 0; c < localNum; c++){
+		printf("Name: %s\nSize: %d\n---------\n", ordenados[c].nombreLocal, ordenados[c].metros2);
+			
+	}
+	
+}
+
+void merge(local ordenados[], int l, int m, int r){
+ 
+    int i, j, k; 
+    int n1 = m - l + 1; 
+    int n2 =  r - m; 
+  
+    local L[n1], R[n2]; 
+
+    for (i = 0; i < n1; i++) 
+        L[i] = ordenados[l + i]; 
+    for (j = 0; j < n2; j++) 
+        R[j] = ordenados[m + 1+ j]; 
+  
+   
+    i = 0; 
+    j = 0; 
+    k = l; 
+    while (i < n1 && j < n2) 
+    { 
+        if (L[i].metros2 <= R[j].metros2) 
+        { 
+            ordenados[k] = L[i]; 
+            i++; 
+        } 
+        else{ 
+            ordenados[k] = R[j]; 
+            j++; 
+        } 
+        k++; 
+    } 
+
+    while (i < n1){ 
+        ordenados[k] = L[i]; 
+        i++; 
+        k++; 
+    } 
+
+    while (j < n2){ 
+        ordenados[k] = R[j]; 
+        j++; 
+        k++; 
+    } 
+} 
+  
+
+void mergeSort(local ordenados[], int l, int r){
+
+    if (l < r){ 
+
+        int m = l+(r-l)/2; 
+  
+        // Sort first and second halves 
+        mergeSort(ordenados, l, m); 
+        mergeSort(ordenados, m+1, r); 
+  
+        merge(ordenados, l, m, r); 
+    } 
+    
+} 
+
 
 
 

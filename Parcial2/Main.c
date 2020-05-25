@@ -62,6 +62,12 @@ int main(){
     		case 8:
     			orderByRating(centroC, pisos, numLoc);
     			break;
+    		case 9:
+    			orderByArrival(centroC, pisos, numLoc);
+    			break;
+    		case 10:
+    			orderBySize(centroC, pisos, numLoc);
+    			break;
     		case 15:
     			save(centroC, pisos, numLoc, "cc.bin");
     			break;
