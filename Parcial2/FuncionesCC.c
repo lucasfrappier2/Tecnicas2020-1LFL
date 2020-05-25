@@ -99,28 +99,20 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 	    }	
 	}while(piso>pisos-1 || loc > numLoc-1);
 	
-/*
-	if((piso>pisos || piso<1) || (loc>numLoc || loc<1)){				//Asegura que los valores esten dentro de los rangos de tamaño de la matriz
-		printf("Por favor digite un piso y un numero de local válidos\n");
-		agregarLocal(centroC);
-		return;
-	}else if(centroC[piso][loc].dispo == noDisp){				//Verifica disponibilidad del espacio en la matriz
-		printf("Local ocupado. Por favor intentar de nuevo\n");
-		agregarLocal(centroC);									//Vuelve a correr la funcion hasta que el usuario digite valores validos.
-		return;
-*/
-//	}else{
 		if(centroC[piso][loc].dispo == disp){
 			printf("Nombre local: ");
 			scanf("%s", centroC[piso][loc].nombreLocal);
 			printf("Tamaño del local en metros cuadrados: ");
 			scanf("%d", &centroC[piso][loc].metros2);
-			printf("Cantidad de empleados: ");
-			scanf("%d", &centroC[piso][loc].empleados);
-			while((centroC[piso][loc].metros2)/4 < centroC[piso][loc].empleados - 1 ){
-				printf("Por el distanciamiento social, debes dejar un espacio de 4 m2 por persona, y dejar espacio para almenos un empleado.\nCapacidad maxima de empleados para %s: %d", (centroC[piso][loc].nombreLocal, centroC[piso][loc].metros2 / 4)-1 );
+			printf("Metros: %d\n", centroC[piso][loc].metros2);
+			int maxEmp = centroC[piso][loc].metros2 / 4;
+
+			do{
+				printf("Se debe dejar un espacio de 4 m2 por persona (CORONA), y dejar espacio para almenos un cliente.\nCapacidad maxima de empleados para %s: %d\n", centroC[piso][loc].nombreLocal, maxEmp );
+				printf("Cantidad de empleados: ");
 				scanf("%d", &centroC[piso][loc].empleados);
-			}
+			}while(centroC[piso][loc].empleados > maxEmp-1);
+
 			
 			
 			centroC[piso][loc].dispo = noDisp;
@@ -141,10 +133,10 @@ void mostrarLocales(local** centroC, int pisos, int numLoc){					//Imprime todas
 		for(j = 0; j<numLoc; j++){
 			if(centroC[c][j].dispo == noDisp){
 				if(centroC[c][j].rating[0] > 0){
-					printf("%s\nPiso %d, Local %d\nID: %d\nRating: %0.1f", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, (float)centroC[c][j].rating[1]/centroC[c][j].rating[0]);
+					printf("%s\nPiso %d, Local %d\nID: %d\nEmpleados: %d\nRating: %0.1f", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, centroC[c][j].empleados, (float)centroC[c][j].rating[1]/centroC[c][j].rating[0]);
 					printf("\n---------\n");
 				}else{
-					printf("%s\nPiso %d, Local %d\nID: %d\nRating: N/A", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal);
+			printf("%s\nPiso %d, Local %d\nID: %d\nEmpleados: %d\nRating: N/A", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, centroC[c][j].empleados);
 					printf("\n---------\n");
 				}
 				
