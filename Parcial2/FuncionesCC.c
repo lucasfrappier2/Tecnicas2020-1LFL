@@ -24,7 +24,7 @@ int menu(){
 	printf("5. Modificar nombre local\n");
 	printf("6. Encontrar local\n");
 	printf("7. Calificar Local\n");
-	
+	printf("8. Ordenar por rating (SelectionSort)\n");
 	printf("15. Guardar CC\n");
 	printf("Para salir, ingrese cero (0)\n");
 	printf("Seleccion: ");
@@ -47,6 +47,7 @@ local** fill(int pisos, int numLoc){
 			centroC[c][j].rating[0] = 0;
 			centroC[c][j].rating[1] = 0;
 			centroC[c][j].metros2 = 0;
+			centroC[c][j].empleados = 0;
 
 
 		}
@@ -112,6 +113,15 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 		if(centroC[piso][loc].dispo == disp){
 			printf("Nombre local: ");
 			scanf("%s", centroC[piso][loc].nombreLocal);
+			printf("Tamaño del local en metros cuadrados: ");
+			scanf("%d", &centroC[piso][loc].metros2);
+			printf("Cantidad de empleados: ");
+			scanf("%d", &centroC[piso][loc].empleados);
+			while((centroC[piso][loc].metros2)/4 < centroC[piso][loc].empleados - 1 ){
+				printf("Por el distanciamiento social, debes dejar un espacio de 4 m2 por persona, y dejar espacio para almenos un empleado.\nCapacidad maxima de empleados para %s: %d", (centroC[piso][loc].nombreLocal, centroC[piso][loc].metros2 / 4)-1 );
+				scanf("%d", &centroC[piso][loc].empleados);
+			}
+			
 			
 			centroC[piso][loc].dispo = noDisp;
 			printf("Local agregado exitosamente: \n");				//Confirma que se agrega un local y hace display de su informacion
@@ -130,8 +140,14 @@ void mostrarLocales(local** centroC, int pisos, int numLoc){					//Imprime todas
 	for(c = 0; c<pisos; c++){
 		for(j = 0; j<numLoc; j++){
 			if(centroC[c][j].dispo == noDisp){
-				printf("%s\nPiso %d, Local %d\nID: %d\nRating: %0.1f", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, (float)centroC[c][j].rating[1]/centroC[c][j].rating[0]);
-				printf("\n---------\n");
+				if(centroC[c][j].rating[0] > 0){
+					printf("%s\nPiso %d, Local %d\nID: %d\nRating: %0.1f", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal, (float)centroC[c][j].rating[1]/centroC[c][j].rating[0]);
+					printf("\n---------\n");
+				}else{
+					printf("%s\nPiso %d, Local %d\nID: %d\nRating: N/A", centroC[c][j].nombreLocal, centroC[c][j].pisoLocal, centroC[c][j].numLocalxPiso, centroC[c][j].idLocal);
+					printf("\n---------\n");
+				}
+				
 			}
 		}
 	}
@@ -168,6 +184,7 @@ void eliminarLocal(local** centroC, int pisos, int numLoc){					//Elimina un loc
 	scanf("%d", &fil);
 	centroC[col][fil].dispo = disp;								//Lo que hace es settear la disponibilidad de la celda a disp para que se pueda sobreescribir con otro nombre de local y no se haga display de el mientras tanto
 	printf("\nSe ha eliminado %s del centro comercial\n", centroC[col][fil]);
+	contarLocales(centroC, pisos, numLoc);
 	return;
 	
 }
@@ -266,17 +283,68 @@ void load(local** centroC, int pisos, int numLoc, char* fileName){
 
        // Program exits if the file pointer returns NULL.
        exit(1);
-   }printf("ESTOY DESPUES DEL IF Y ANTES DEL GUAIL\n");
+   }
    fscanf(cantL, "%d", &localesEx);
    printf("Locales a cargar: %d\n", localesEx);
 	for(i = 0; i < localesEx; i++){
 		fread(&currentLoc, sizeof(local), 1, fpt); 
 	   	centroC[currentLoc.pisoLocal][currentLoc.numLocalxPiso] = currentLoc;
-		printf("Cargando %s", currentLoc.nombreLocal);
+		printf("Cargando %s\n", currentLoc.nombreLocal);
 	}
 	fclose(fpt);	   		
 	   		
 }
+
+void orderByRating(local** centroC, int pisos, int numLoc){
+	int localNum, c, j, ordCt = 0;
+	contarLocales(centroC, pisos, numLoc);
+	FILE *cantl = fopen("cantLocales.txt", "r");
+	fscanf(cantl, "%d", &localNum);
+	fclose(cantl);
+	local ordenados[localNum];
+	printf("%d locales\n", localNum);
+	for(c = 0; c<pisos; c++){
+		for(j = 0; j<numLoc; j++){
+			if(centroC[c][j].dispo == noDisp){
+				ordenados[ordCt] = centroC[c][j];
+				ordCt++;
+			}
+		}
+	}
+	
+	//printf("1. %s\n2. %s\n3. %s\n4. %s\n", ordenados[0].nombreLocal, ordenados[1].nombreLocal,ordenados[2].nombreLocal,ordenados[3].nombreLocal);
+	selectionSort(ordenados, localNum);
+	
+}
+
+void selectionSort(local ordenados[], int n){
+	
+  int i, j, c, swapLoc;
+  local min, temp;							//Declaracion de variables que se usaran
+
+  for (i = 0; i < n-1; i++){
+  
+    min = ordenados[i];
+    for (j = i+1; j < n; j++){																													//SELECTION SORT
+      	if (((float)(ordenados[j].rating[1])/(ordenados[j].rating[0])) < ((float)min.rating[1]/min.rating[0])){
+      		min = ordenados[j];
+      		swapLoc = j;
+	  	}   
+    }
+    temp = ordenados[i];
+    ordenados[i] = min;
+    ordenados[swapLoc] = temp;
+ 	}
+ 	//printf("LOWEST: %s\n", ordenados[0].nombreLocal);
+  	for(c = 0; c < n; c++){
+		printf("Name: %s\nRating: %0.1f\n---------\n", ordenados[c].nombreLocal, (float)ordenados[c].rating[1]/ordenados[c].rating[0]);
+			
+	}
+	return;
+}
+	
+
+
 
       
 	

@@ -59,6 +59,9 @@ int main(){
     		case 7:
     			rate(centroC, pisos, numLoc);
     			break;
+    		case 8:
+    			orderByRating(centroC, pisos, numLoc);
+    			break;
     		case 15:
     			save(centroC, pisos, numLoc, "cc.bin");
     			break;

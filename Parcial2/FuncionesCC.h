@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 //#import <stdexcept>
 #define COL 11  //Para asegurar que se pueda tener del piso 1 al 10, en vez de tener del 0 al 9
 #define FIL 6
@@ -19,6 +20,8 @@ typedef struct {
     disponibilidad_e dispo;
     int rating[2];							//[visitas, totalRatings]
     int metros2;
+    int empleados;
+
     
 
     
@@ -54,10 +57,16 @@ void cambiarNombreLocal(local** centroC, int pisos, int numLoc);
 void buscarLocal(local** centroC, int pisos, int numLoc);
 
 void rate(local** centroC, int pisos, int numLoc);
+
+void orderByRating(local** centroC, int pisos, int numLoc);
 	
 void save(local** centroC, int pisos, int numLoc, char* fileName);
 
 void load(local** centroC, int pisos, int numLoc, char* fileName);
+
+void selectionSort(local ordenados[], int n);
+
+
 
 
 

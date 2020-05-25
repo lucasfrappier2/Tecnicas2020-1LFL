@@ -1,3 +1,10 @@
+
+#define FUNCIONESCC_H_
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+
 void mergeSort(int array[],int i,int j)
 {
 	int mid;
@@ -38,25 +45,30 @@ void merge(int array[],int i1,int j1,int i2,int j2)
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------//
-
-void selectionSort(int array[], int n)
+/*
+void selectionSort(local** ordenados, int n)
 {
   int i, j;
-  int min, temp;							//Declaracion de variables que se usaran
+  local min, temp;							//Declaracion de variables que se usaran
 
   for (i = 0; i < n-1; i++){
   
-    min = i;
+    min = ordenados[i];
     for (j = i+1; j < n; j++){																													//SELECTION SORT
-    
-      if (array[j] < array[min])
-        min = j;
+      if (((float)ordenados[j].rating[1]/ordenados[j].rating[0]) < ((float)min.rating[1]/min.rating[0])){
+      	min = j;
+	  }   
     }
-    temp = array[i];
-    array[i] = array[min];
-    array[min] = temp;
+    temp = ordenados[i];
+    ordenados[i] = min;
+    min = temp;
   }
-}
+  for(c = 0; c<pisos; c++){
+		printf("Name: %s\nRating: %0.1f\n---------\n", ordenados[c].nombreLocal, float(ordenados[c].rating[1]/ordenados[c].rating[0));
+			
+		}
+	}
+*/
 
 //-------------------------------------------------------------------------------------------------------------------------------//
 
