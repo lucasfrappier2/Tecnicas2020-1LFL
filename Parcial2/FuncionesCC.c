@@ -111,7 +111,7 @@ void agregarLocal(local** centroC, int pisos, int numLoc){
 			int maxEmp = centroC[piso][loc].metros2 / 4;
 
 			do{
-				printf("Se debe dejar un espacio de 4 m2 por persona (CORONA), y dejar espacio para almenos un cliente.\nCapacidad maxima de empleados para %s: %d\n", centroC[piso][loc].nombreLocal, maxEmp );
+				printf("Se debe dejar un espacio de 4 m2 por persona (CORONA), y dejar espacio para almenos un cliente.\nCapacidad maxima de empleados para %s: %d\n", centroC[piso][loc].nombreLocal, maxEmp-1 );
 				printf("Cantidad de empleados: ");
 				scanf("%d", &centroC[piso][loc].empleados);
 			}while(centroC[piso][loc].empleados > maxEmp-1);
